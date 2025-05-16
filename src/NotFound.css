@@ -1,0 +1,71 @@
+/* src/pages/NotFound.css */
+.notfound-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #f7fafc;
+  color: #2d3748;
+  text-align: center;
+}
+
+.notfound-container h1 {
+  font-size: 6rem;
+  margin-bottom: 20px;
+  color: #e53e3e;
+}
+
+.notfound-container p {
+  font-size: 1.5rem;
+  margin-bottom: 30px;
+}
+
+.notfound-container p:last-child {
+  font-size: 1rem;
+  color: #4a5568;
+  margin-top: 20px;
+}
+
+.notfound-container .notfound-image {
+  max-width: 60%;
+  height: 500px;
+  margin-top: 20px;
+  margin-bottom: 30px;
+  border-radius: 8px;
+  width:1000px;
+}
+/* Pagination */
+.pagination {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.pagination-button {
+  margin: 0 5px;
+  padding: 8px 14px;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 8px;
+  background-color: #eee;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.pagination-button:hover {
+  background-color: #d1c4e9;
+  transform: scale(1.05);
+}
+
+.pagination-button.active {
+  background-color: blueviolet;
+  color: white;
+  font-weight: bold;
+  transform: scale(1.1);
+}
+
+.pagination-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}

@@ -1,0 +1,49 @@
+/* Contact Us Section Styling */
+.contact-us {
+    background: linear-gradient(to bottom right, #e0f7fa, #e1bee7);
+    padding: 3rem 2rem;
+    margin: 2rem auto;
+    max-width: 800px;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', sans-serif;
+    color: #333;
+    animation: fadeIn 0.6s ease-in-out;
+  }
+  
+  /* Heading */
+  .contact-us h1 {
+    font-size: 2.8rem;
+    color: #6a1b9a;
+    margin-bottom: 1.5rem;
+    text-shadow: 1px 1px 2px #ccc;
+  }
+  
+  /* Paragraphs */
+  .contact-us p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #444;
+  }
+  
+  /* Contact Details Box */
+  .contact-details {
+    background-color: #ffffffd9;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin: 1.5rem 0;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Keyframes for fadeIn (if not already present) */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  

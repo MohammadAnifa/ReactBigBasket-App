@@ -1,0 +1,61 @@
+/* Signing.css */
+
+.signing-container {
+  max-width: 400px;
+  margin: 60px auto;
+  padding: 30px;
+  background-color: #f4f4f4;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.signing-container h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.signing-container form input {
+  width: 100%;
+  padding: 10px;
+  margin: 12px 0;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  transition: border-color 0.3s ease;
+}
+
+.signing-container form input:focus {
+  border-color: #28a745;
+  outline: none;
+}
+
+.signing-container form button {
+  width: 100%;
+  padding: 12px;
+  background-color: #28a745;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.signing-container form button:hover {
+  background-color: #218838;
+}
+
+.signing-container p {
+  margin-top: 16px;
+  font-size: 14px;
+}
+
+.signing-container a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.signing-container a:hover {
+  text-decoration: underline;
+}

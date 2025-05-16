@@ -1,0 +1,101 @@
+.app-header {
+  background-color: #2c3e50;
+  
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  padding: 2px 0; /* Medium padding */
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 0 20px; /* Balanced side padding */
+}
+
+.brand-icon {
+  width: 32px; /* Slightly smaller icon */
+  height: 32px;
+  margin-left: 10px;
+}
+
+.brand-name {
+  font-size: 1.6rem; /* Medium font size */
+  color: white;
+  font-weight: 600;
+}
+
+.tagline {
+  font-size: 0.95rem;
+  color: #ccc;
+  margin-left: 10px;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  gap: 30px; /* Medium spacing between links */
+  flex-wrap: wrap;
+}
+
+.nav-link {
+  font-size: 1rem; /* Medium text size */
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+  position: relative; /* Set up for pseudo-element */
+  transition: color 0.3s ease, transform 0.3s ease; /* Smooth transition for color and transformation */
+}
+
+/* Creating the underline effect using the ::after pseudo-element */
+.nav-link::after {
+  content: ''; /* No text, just the underline */
+  position: absolute;
+  bottom: -2px; /* Adjust the distance from text */
+  left: 0;
+  width: 100%;
+  height: 2px; /* Thickness of the underline */
+  background-color: transparent; /* Initially transparent */
+  transition: background-color 0.3s ease; /* Smooth transition for underline */
+}
+
+/* Underline effect on hover */
+.nav-link:hover {
+  color: #ffdd57; /* Change link color on hover */
+}
+
+.nav-link:hover::after {
+  background-color: #ffdd57; /* Underline color on hover */
+}
+
+/* Zoom and blink effect on click */
+.nav-link:active {
+  animation: zoom-blink 0.6s ease; /* Trigger the animation on click */
+  color: #ffdd57; /* Change text color when clicked */
+}
+
+/* Animation to zoom and blink */
+@keyframes zoom-blink {
+  0% {
+    transform: scale(1); /* Normal size */
+  }
+  50% {
+    transform: scale(1.2); /* Slightly zoom in */
+  }
+  100% {
+    transform: scale(1); /* Return to normal size */
+  }
+}
+
+.main-content {
+  padding-top: 90px; /* Adjust based on header height */
+}

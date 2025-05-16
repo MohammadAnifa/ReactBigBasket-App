@@ -1,0 +1,319 @@
+/* Ensure body and html take up full height */
+html, body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: flex-start; /* Align to the top of the page */
+}
+
+/* Main container holding all the content */
+.veg-container1 {
+  padding: 20px;
+  background-color: #f9f9f9;
+  max-width: 1200px;
+  width: 100%; /* Ensure full width within the max-width limit */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center horizontally */
+  justify-content: flex-start; /* Keep items aligned to top */
+  min-height: 100vh; /* Ensure full height */
+  box-sizing: border-box; /* Account for padding */
+}
+
+/* Title */
+.veg-title {
+  text-align: center;
+  font-size: 2rem;
+  
+}
+
+/* Offer Banner */
+.offer-banner {
+  text-align: center;
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  background-color: #ff9a8b;
+  padding: 10px;
+  color: white;
+  border-radius: 5px;
+}
+
+/* Filters Section */
+.filter-section {
+  margin-bottom: 30px;
+  width: 100%; /* Ensure filter section is full width */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.filter-title {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.filter-checkboxes {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 10px;
+}
+
+.filter-checkbox {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-label {
+  margin-left: 5px;
+}
+
+.items-left {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.clear-button {
+  background-color: #e57373;
+  border: none;
+  padding: 10px;
+  color: white;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  display: block;
+  margin: 20px auto; /* Center button horizontally */
+  width: auto;
+}
+
+.clear-button:hover {
+  background-color: #f44336;
+
+}
+
+/* Product Items Display */
+/* Container for product grid */
+.veg-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  width: 100%;
+  align-items: stretch; /* Ensure all items stretch to same height */
+}
+
+/* Each card/item */
+
+.veg-image {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.veg-name {
+  font-size: 1.2rem;
+  margin-top: 10px;
+}
+
+.veg-price {
+  font-size: 1.1rem;
+  color: #4caf50;
+  margin: 10px 0;
+}
+
+.veg-description {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.veg-button {
+  background-color:purple;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: auto;
+}
+
+.veg-button:hover {
+  background-color: #388e3c;
+}
+
+/* Pagination Styles */
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination-button {
+  background-color: #f1f1f1;
+  border: 1px solid #ddd;
+  padding: 10px;
+  cursor: pointer;
+  margin: 0 5px;
+  border-radius: 5px;
+}
+
+.pagination-button:hover {
+  background-color: #4caf50;
+  color: white;
+}
+
+.pagination-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.pagination-button.active {
+  background-color: #4caf50;
+  color: white;
+}
+
+/* Footer Styles */
+.footer {
+  background-color: #333;
+  color: white;
+  padding: 20px;
+  margin-top: 40px;
+  text-align: center;
+}
+
+.footer-top {
+  text-align: center;
+}
+
+.footer-title {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.footer-links a {
+  color: white;
+  margin: 0 15px;
+  text-decoration: none;
+  font-size: 1rem;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+}
+
+.footer-bottom {
+  margin-top: 20px;
+}
+
+.footer-socials {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.footer-socials i {
+  margin: 0 10px;
+}
+
+.footer-copy {
+  font-size: 1rem;
+}
+.veg-items {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Force 4 cards per row */
+  gap: 20px;
+  width: 100%;
+  align-items: stretch;
+}
+@media (max-width: 1024px) {
+  .veg-items {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .veg-items {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .veg-items {
+    grid-template-columns: 1fr;
+  }
+}
+.pagination-button-nav1{
+  color:red;
+}
+.pagination-button-nav2{
+  color:red;
+}
+
+/* Improve Image Styling */
+.veg-image {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 10px;
+  transition: transform 0.3s ease;
+}
+
+/* Optional: Slight zoom on image hover */
+.veg-item:hover .veg-image {
+  transform: scale(1.05);
+}
+
+/* Button Polish */
+.veg-button {
+  background-color: purple;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.veg-button:hover {
+  background-color:orange;
+  transform: scale(1.05);
+}
+
+
+/* Hover Effect with deeper shadow */
+.veg-item:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2); /* elevated shadow on hover */
+}
+/* Default card style with smooth shadow and transition */
+.veg-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: white;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  transition: all 0.4s ease;
+  cursor: pointer;
+  z-index: 0;
+}
+
+/* Hover effect */
+.veg-item:hover {
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* Active (clicked) card effect */
+.veg-item.active {
+  transform: translateY(-15px);
+  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.3);
+  z-index: 1;
+  border: 2px solid #4caf50;
+}
