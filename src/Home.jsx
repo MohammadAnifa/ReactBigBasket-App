@@ -7,34 +7,34 @@ const quickCategories = [
   {
     title: 'Vegetables',
     description: 'Fresh and organic vegetables straight from the farm.',
-    image: '/images/veg1.jpg',
+    image: '/images/vegii.png',
     link: '/veg',
   },
   {
     title: 'Non-Veg',
     description: 'High-quality meat and seafood for your meals.',
-    image: '/images/nonveg.jpg',
+    image: '/images/non.png',
     link: '/nonveg',
   },
   {
     title: 'Milk Products',
     description: 'Pure dairy items including milk, curd, butter, and more.',
-    image: '/images/dairy.jpg',
+    image: '/images/dairy.png',
     link: '/milk',
   },
   {
     title: 'Chocolates',
     description: 'Delicious chocolates and sweets for every occasion.',
-    image: '/images/chocos.jpg',
+    image: '/images/chocoo.png',
     link: '/chocolates',
   },
 ];
 
 const foodItems = [
   { name: 'Dry Fruits', img: '/images/dryfruits.png' },
-  { name: 'Fruits', img: '/images/fruits1.jpg' },
-  { name: 'Cakes', img: '/images/cakes.jpg' },
-  { name: 'Snacks', img: '/images/snacks.jpg' },
+  { name: 'Fruits', img: '/images/fruitss.png' },
+  { name: 'Cakes', img: '/images/cake.png' },
+  { name: 'Snacks', img: '/images/snaks.png' },
 ];
 
 const Home = () => {
