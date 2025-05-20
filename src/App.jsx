@@ -89,10 +89,13 @@ function App() {
           <Route path="/contactus" element={<ContactUs />} />
           <Route path="/SignUp"   element={<Signup />}/>
           
+          
+          
           <Route path="/*" element={<NotFound />} />
         </Routes>
       </main>
     </BrowserRouter>
+    
   );
 }
 

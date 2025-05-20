@@ -1,168 +1,177 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { ToastContainer, toast } from 'react-toastify';
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { addToCart } from './store';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './Veg.css';
-import './Footer.css';
+import "./Veg.css";
+import "./Footer.css";
 
 const Veg = () => {
-  const vegProducts = useSelector((state) => state.products.Veg);
   const dispatch = useDispatch();
+  const allVegItems = useSelector((state) => state.products.Veg);
 
-  const priceRanges = [
-    { value: '₹10 - ₹50', min: 10, max: 50 },
-    { value: '₹51 - ₹100', min: 51, max: 100 },
-    { value: '₹101 - ₹200', min: 101, max: 200 },
-    { value: '₹201 - ₹500', min: 201, max: 500 },
-    { value: '₹501 - ₹600', min: 501, max: 600 },
-  ];
-
-  const [selectedRanges, setSelectedRanges] = useState([]);
+  const [filteredVegItems, setFilteredVegItems] = useState([]);
+  const [selectedPrices, setSelectedPrices] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [timer, setTimer] = useState(22 * 3600 + 29 * 60 + 6); // 23h 30m 6s
+
   const itemsPerPage = 4;
 
-  const handleCheckboxChange = (selectedRange) => {
-    const isAlreadySelected = selectedRanges.some(
-      (range) => range.value === selectedRange.value
-    );
-
-    if (isAlreadySelected) {
-      setSelectedRanges(selectedRanges.filter((range) => range.value !== selectedRange.value));
-    } else {
-      setSelectedRanges([...selectedRanges, selectedRange]);
-    }
-    setCurrentPage(1);
-  };
-
-  const handleClearAll = () => {
-    setSelectedRanges([]);
-    setCurrentPage(1);
-  };
-
-  const getFilteredItems = () => {
-    if (selectedRanges.length === 0) return vegProducts;
-    return vegProducts.filter((product) =>
-      selectedRanges.some((range) => product.price >= range.min && product.price <= range.max)
-    );
-  };
-
-  const getCountForRange = (range) => {
-    return vegProducts.filter((product) => product.price >= range.min && product.price <= range.max).length;
-  };
-
-  const filteredItems = getFilteredItems();
-  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
-  const currentItems = filteredItems.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-
-  const handlePrev = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
-  const handleNext = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-
-  // TIMER
-  const [timeLeft, setTimeLeft] = useState(22 * 3600 + 30 * 60 + 5);
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
+    const countdown = setInterval(() => {
+      setTimer((prev) => {
+        if (prev === 0) {
+          clearInterval(countdown);
+          return 0;
+        }
+        return prev - 1;
+      });
     }, 1000);
-    return () => clearInterval(timer);
+    return () => clearInterval(countdown);
   }, []);
 
-  const formatTime = (seconds) => {
-    const h = Math.floor(seconds / 3600);
-    const m = Math.floor((seconds % 3600) / 60);
-    const s = seconds % 60;
-    return `${h}h ${m}m ${s}s`;
+  useEffect(() => {
+    let filtered = [...allVegItems];
+
+    if (selectedPrices.length > 0) {
+      filtered = filtered.filter((item) => {
+        return selectedPrices.some((priceRange) => {
+          if (priceRange === "0-30") return item.price >= 0 && item.price <= 30;
+          if (priceRange === "31-60") return item.price >= 31 && item.price <= 60;
+          if (priceRange === "61-100") return item.price >= 61 && item.price <= 100;
+          if (priceRange === "100+") return item.price > 100;
+          return false;
+        });
+      });
+    }
+
+    setFilteredVegItems(filtered);
+    setCurrentPage((prev) => {
+      const newTotalPages = Math.ceil(filtered.length / itemsPerPage);
+      return prev > newTotalPages ? 1 : prev;
+    });
+  }, [allVegItems, selectedPrices]);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredVegItems.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredVegItems.length / itemsPerPage);
+
+  const handleCheckboxChange = (e) => {
+    const { value, checked } = e.target;
+    if (checked) {
+      setSelectedPrices((prev) => [...prev, value]);
+    } else {
+      setSelectedPrices((prev) => prev.filter((v) => v !== value));
+    }
+  };
+
+  const clearFilters = () => {
+    setSelectedPrices([]);
+  };
+
+  const formatTime = (secs) => {
+    const hours = Math.floor(secs / 3600);
+    const minutes = Math.floor((secs % 3600) / 60);
+    const seconds = secs % 60;
+    return `${hours}h ${minutes}min ${seconds}sec`;
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
 
   return (
-    <>
-      <div className="veg-container1">
-        <h2 className="veg-title animated-title">Veg Items 🥦</h2>
+    <div className="veg-container">
+      <h1 className="veg-title">Fresh Vegetables</h1>
 
-        <div className="offer-banner pulse-banner">
-          {timeLeft > 0 ? (
-            <>⏳ Hurry! Offer ends in: <span className="timer">{formatTime(timeLeft)}</span></>
-          ) : (
-            <span style={{ color: '#fff' }}>❌ Offer expired!</span>
-          )}
+      <div className="filter-section">
+        <h2 className="filter-title">Price</h2>
+        <div className="filter-checkboxes">
+          {["0-30", "31-60", "61-100", "100+"].map((range) => (
+            <label key={range} className="filter-checkbox">
+              <input
+                type="checkbox"
+                value={range}
+                checked={selectedPrices.includes(range)}
+                onChange={handleCheckboxChange}
+              />
+              <span className="checkbox-label">{range}</span>
+            </label>
+          ))}
+          <button onClick={clearFilters} disabled={selectedPrices.length === 0}>
+            Clear Filters
+          </button>
         </div>
+      </div>
 
-        {/* Filter Section */}
-        <div className="filter-section fade-in">
-          <h4 className="filter-title">Filter by Price Range:</h4>
-          <div className="filter-checkboxes">
-            {priceRanges.map((range, index) => (
-              <label key={index} className="filter-checkbox">
-                <input
-                  type="checkbox"
-                  checked={selectedRanges.some((r) => r.value === range.value)}
-                  onChange={() => handleCheckboxChange(range)}
-                />
-                <span className="checkbox-label">{range.value}</span>
-                <span className="items-left">({getCountForRange(range)} items)</span>
-              </label>
-            ))}
-          </div>
-          <button onClick={handleClearAll} className="clear-button">Clear All</button>
-        </div>
+      <div className="offer-banner">
+        Limited Time Offer: Flat 20% Off! <span className="timer">⏰ {formatTime(timer)}</span>
+      </div>
 
-        {/* Product Cards */}
-        <div className="veg-items">
-          {currentItems.length === 0 ? (
-            <p>No items match the selected range.</p>
-          ) : (
-            currentItems.map((product, index) => (
-              <div key={index} className="veg-item fade-in">
-                <img src={product.image} alt={product.name} className="veg-image" />
-                <h3 className="veg-name">{product.name}</h3>
-                <p className="veg-price">₹{product.price}</p>
-                <p className="veg-description">{product.description}</p>
-                <button
-                  onClick={() => {
-                    dispatch(addToCart(product));
-                    toast.success(`${product.name} added to cart!`);
-                  }}
-                  className="veg-button"
-                >
-                  Add to Cart
-                </button>
-              </div>
-            ))
-          )}
-        </div>
-
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="pagination">
-            <button onClick={handlePrev} disabled={currentPage === 1} className="pagination-button-nav1">
-              ◀ Prev
-            </button>
-            {[...Array(totalPages)].map((_, index) => (
+      <div className="veg-products-section">
+        {currentItems.length === 0 ? (
+          <p style={{ color: "white", textAlign: "center", fontWeight: "bold" }}>
+            No vegetables match the selected filter range.
+          </p>
+        ) : (
+          currentItems.map((veg, index) => (
+            <div key={index} className="veg-item">
+              <img src={veg.image} alt={veg.name} className="veg-image" />
+              <p className="veg-price">₹{veg.price}</p>
+              <p className="veg-description">{veg.description}</p>
+              <h3 className="veg-name">{veg.name}</h3>
               <button
-                key={index}
-                onClick={() => setCurrentPage(index + 1)}
-                className={`pagination-button ${currentPage === index + 1 ? 'active' : ''}`}
+                className="veg-button"
+                onClick={() => {
+                  dispatch(addToCart(veg));
+                  toast.success(`${veg.name} added to cart!`, {
+                    position: "top-center",
+                    autoClose: 1500,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: false,
+                    draggable: true,
+                    theme: "colored",
+                  });
+                }}
               >
-                {index + 1}
+                Add to Cart
               </button>
-            ))}
-            <button onClick={handleNext} disabled={currentPage === totalPages} className="pagination-button-nav2">
-              Next ▶
-            </button>
-          </div>
+            </div>
+          ))
         )}
       </div>
 
-      {/* Toast Notification */}
-      <ToastContainer position="bottom-left" autoClose={2000} />
+      <div className="pagination">
+        <button className="pagination-button1" onClick={handlePreviousPage} disabled={currentPage === 1}>
+          Previous
+        </button>
+        {[...Array(totalPages)].map((_, index) => (
+          <button
+            key={index}
+            className={`pagination-number ${currentPage === index + 1 ? "active" : ""}`}
+            onClick={() => setCurrentPage(index + 1)}
+          >
+            {index + 1}
+          </button>
+        ))}
+        <button className="pagination-button2" onClick={handleNextPage} disabled={currentPage === totalPages}>
+          Next
+        </button>
+      </div>
+
+      {/* Toast Notifications */}
+      <ToastContainer />
 
       {/* Footer */}
       <footer className="footer">
         <div className="footer-top">
-          <h3 className="footer-title"> 🧺 BigBasket - All Items Are Available Here!🙂</h3>
+          <h3 className="footer-title"> 🧺 BigBasket - All Items Are Available Here! 🙂</h3>
           <div className="footer-links">
             <a href="/">Home</a>
             <a href="/about">About Us</a>
@@ -172,14 +181,14 @@ const Veg = () => {
         </div>
         <div className="footer-bottom">
           <div className="footer-socials">
-            <i className="fab fa-facebook-f"></i>
-            <i className="fab fa-instagram"></i>
-            <i className="fab fa-youtube"></i>
+            <i className="fab fa-facebook-f" aria-label="Facebook"></i>
+            <i className="fab fa-instagram" aria-label="Instagram"></i>
+            <i className="fab fa-youtube" aria-label="YouTube"></i>
           </div>
           <p className="footer-copy">© 2025 FoodsZone. All Rights Reserved By Ashvita Kapat</p>
         </div>
       </footer>
-    </>
+    </div>
   );
 };
 

@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from './store';
 import './NonVeg.css';
 import './Footer.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ITEMS_PER_PAGE = 4;
 
@@ -42,7 +44,6 @@ const NonVeg = () => {
 
   const filteredItems = nonVegProducts.filter((item) => item.price >= priceFilter);
 
-  // Pagination logic
   const totalPages = Math.ceil(filteredItems.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const currentItems = filteredItems.slice(startIndex, startIndex + ITEMS_PER_PAGE);
@@ -66,7 +67,6 @@ const NonVeg = () => {
           )}
         </div>
 
-        {/* Price Slider */}
         <div className="price-filter-section">
           <h4>
             Filtering items from ₹{priceFilter}
@@ -80,13 +80,12 @@ const NonVeg = () => {
             value={priceFilter}
             onChange={(e) => {
               setPriceFilter(Number(e.target.value));
-              setCurrentPage(1); // reset to page 1 when filter changes
+              setCurrentPage(1);
             }}
             className="price-slider"
           />
         </div>
 
-        {/* Products */}
         <div className="nonveg-items">
           {currentItems.length === 0 ? (
             <p>No items found at or above ₹{priceFilter}.</p>
@@ -97,7 +96,21 @@ const NonVeg = () => {
                 <h3 className="nonveg-name">{product.name}</h3>
                 <p className="nonveg-price">₹{product.price}</p>
                 <p className="nonveg-description">{product.description}</p>
-                <button onClick={() => dispatch(addToCart(product))} className="nonveg-button">
+                <button
+                  onClick={() => {
+                    dispatch(addToCart(product));
+                    toast.success(`${product.name} added to cart!`, {
+                      position: "top-right",
+                    autoClose: 1500,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: false,
+                    draggable: true,
+                    theme: "colored",
+                  });
+                }}
+                  className="nonveg-button"
+                >
                   Add To Cart 🛒
                 </button>
               </div>
@@ -105,13 +118,12 @@ const NonVeg = () => {
           )}
         </div>
 
-        {/* Pagination Controls */}
         {totalPages > 1 && (
           <div className="pagination">
             <button
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
-              className="pagination-button"
+              className="pagination-button3"
             >
               Previous
             </button>
@@ -134,6 +146,9 @@ const NonVeg = () => {
           </div>
         )}
       </div>
+
+      {/* Toast Notification */}
+      <ToastContainer />
 
       {/* Footer */}
       <footer className="footer">
