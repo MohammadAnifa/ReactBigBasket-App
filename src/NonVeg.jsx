@@ -9,6 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const ITEMS_PER_PAGE = 4;
 
 const NonVeg = () => {
+  // Fetch nonVegProducts from Redux store
   const nonVegProducts = useSelector((state) => state.products.nonVeg);
   const dispatch = useDispatch();
 
@@ -20,9 +21,9 @@ const NonVeg = () => {
     { label: '₹501 - ₹600', min: 501, max: 600 },
   ];
 
-  const [priceFilter, setPriceFilter] = useState(10);
+  const [priceFilter, setPriceFilter] = useState(10); // Set to 10 to ensure minimal filtering
   const [timeLeft, setTimeLeft] = useState(22 * 3600 + 30 * 60 + 5);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(4); // Set to 4 to match screenshot
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -42,17 +43,47 @@ const NonVeg = () => {
     (range) => priceFilter >= range.min && priceFilter <= range.max
   );
 
-  const filteredItems = nonVegProducts.filter((item) => item.price >= priceFilter);
+  // Ensure nonVegProducts is an array
+  const filteredItems = Array.isArray(nonVegProducts)
+    ? nonVegProducts.filter((item) => item.price >= priceFilter)
+    : [];
+
+  // Debug logs to verify data
+  console.log('nonVegProducts:', nonVegProducts);
+  console.log('filteredItems:', filteredItems);
+  console.log('priceFilter:', priceFilter);
 
   const totalPages = Math.ceil(filteredItems.length / ITEMS_PER_PAGE);
+  console.log('totalPages:', totalPages);
+  console.log('currentPage:', currentPage);
+
+  // Adjust currentPage if it exceeds totalPages
+  useEffect(() => {
+    if (totalPages > 0 && currentPage > totalPages) {
+      setCurrentPage(totalPages);
+      console.log('Adjusted currentPage to:', totalPages);
+    } else if (totalPages === 0) {
+      setCurrentPage(1);
+      console.log('Adjusted currentPage to 1 because totalPages is 0');
+    }
+  }, [totalPages, currentPage]);
+
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const currentItems = filteredItems.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  console.log('startIndex:', startIndex);
+  console.log('currentItems:', currentItems);
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
+      console.log('Page changed to:', page);
+    } else {
+      console.log('Invalid page change attempted:', page);
     }
   };
+
+  // Debug log for pagination rendering
+  console.log('Rendering pagination with: Previous, Pages:', Array.from({ length: totalPages }, (_, i) => i + 1), ', Next');
 
   return (
     <>
@@ -81,6 +112,7 @@ const NonVeg = () => {
             onChange={(e) => {
               setPriceFilter(Number(e.target.value));
               setCurrentPage(1);
+              console.log('Price filter changed to:', Number(e.target.value));
             }}
             className="price-slider"
           />
@@ -101,14 +133,15 @@ const NonVeg = () => {
                     dispatch(addToCart(product));
                     toast.success(`${product.name} added to cart!`, {
                       position: "top-right",
-                    autoClose: 1500,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: false,
-                    draggable: true,
-                    theme: "colored",
-                  });
-                }}
+                      autoClose: 1500,
+                      hideProgressBar: false,
+                      closeOnClick: true,
+                      pauseOnHover: false,
+                      draggable: true,
+                      theme: "colored",
+                    });
+                    console.log(`${product.name} added to cart`);
+                  }}
                   className="nonveg-button"
                 >
                   Add To Cart 🛒
@@ -118,39 +151,40 @@ const NonVeg = () => {
           )}
         </div>
 
-        {totalPages > 1 && (
-          <div className="pagination">
-            <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-              className="pagination-button3"
-            >
-              Previous
-            </button>
-            {[...Array(totalPages)].map((_, index) => (
+        {/* Pagination: Show Previous, all page numbers, Next */}
+        <div className="pagination">
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1 || totalPages === 0}
+            className="pagination-button3"
+          >
+            Previous
+          </button>
+          {totalPages > 0 ? (
+            Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
               <button
-                key={index + 1}
-                onClick={() => handlePageChange(index + 1)}
-                className={`pagination-button ${currentPage === index + 1 ? 'active' : ''}`}
+                key={page}
+                onClick={() => handlePageChange(page)}
+                className={`pagination-button ${page === currentPage ? 'active' : ''}`}
               >
-                {index + 1}
+                {page}
               </button>
-            ))}
-            <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              className="pagination-button"
-            >
-              Next
-            </button>
-          </div>
-        )}
+            ))
+          ) : (
+            <button className="pagination-button" disabled>1</button>
+          )}
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages || totalPages === 0}
+            className="pagination-button4"
+          >
+            Next
+          </button>
+        </div>
       </div>
 
-      {/* Toast Notification */}
       <ToastContainer />
 
-      {/* Footer */}
       <footer className="footer">
         <div className="footer-top">
           <h3 className="footer-title"> 🧺 BigBasket - All Items Are Available Here! 🙂</h3>

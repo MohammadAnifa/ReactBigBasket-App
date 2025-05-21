@@ -6,6 +6,9 @@ import confetti from 'canvas-confetti';
 import { useNavigate } from 'react-router-dom';
 import QRCode from 'react-qr-code';
 import emailjs from 'emailjs-com';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 function Cart() {
   const cartObjects = useSelector((globalState) => globalState.cart);
@@ -31,6 +34,7 @@ function Cart() {
   const shipping = 50;
 
   const handleApplyCoupon = () => {
+    
     const couponCode = couponCodeRef.current.value.trim().toUpperCase();
     setCouponName(couponCode);
     switch (couponCode) {
@@ -93,6 +97,12 @@ function Cart() {
     };
 
     dispatch(clearCart());
+    toast.success("🧺 Your cart has been cleared after purchase!", {
+  position: 'top-right',
+  autoClose: 2000,
+  theme: 'colored',
+});
+
     dispatch(ordersDetails(purchaseDetails));
     fireConfetti();
 
@@ -165,14 +175,38 @@ function Cart() {
                   <td>${item.price}</td>
                   <td>
                     <div className="quantity-controls">
-                      <button onClick={() => dispatch(decrementCart(item))} className="btn-decrement">-</button>
+                      <button onClick={() => {
+  dispatch(decrementCart(item));
+  toast.info(`Decreased quantity of ${item.name}`, {
+    position: 'top-right',
+    autoClose: 1000,
+    theme: 'colored',
+  });
+}} className="btn-decrement">-</button>
+
                       <span className="quantity">{item.quantity}</span>
-                      <button onClick={() => dispatch(incrementCart(item))} className="btn-increment">+</button>
+                     <button onClick={() => {
+  dispatch(incrementCart(item));
+  toast.info(`Increased quantity of ${item.name}`, {
+    position: 'top-right',
+    autoClose: 1000,
+    theme: 'colored',
+  });
+}} className="btn-increment">+</button>
+
                     </div>
                   </td>
                   <td>${(item.price * item.quantity).toFixed(2)}</td>
                   <td>
-                    <button onClick={() => dispatch(removeFromCart(item))} className="btn-remove">Remove 🗑️</button>
+                    <button onClick={() => {
+  dispatch(removeFromCart(item));
+  toast.warn(`${item.name} removed from cart!`, {
+    position: 'top-right',
+    autoClose: 1500,
+    theme: 'colored',
+  });
+}} className="btn-remove">Remove 🗑️</button>
+
                   </td>
                 </tr>
               ))}
@@ -282,6 +316,8 @@ function Cart() {
           )}
         </div>
       )}
+      <ToastContainer />
+
     </>
   );
 }

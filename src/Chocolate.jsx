@@ -3,6 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from './store'; 
 import './Chocolate.css';
 import './Footer.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const Chocolate = () => {
   const chocolateProducts = useSelector((state) => state.products.chocolates);
@@ -39,84 +42,99 @@ const Chocolate = () => {
 
   return (
     <>
-    <div className="chocolate-container">
-      <h2>Chocolate Products</h2>
+      <div className="chocolate-container">
+        <h2>Chocolate Products</h2>
 
-      <div className="offer-banner">
-        {timeLeft > 0 ? (
-          <>
-            ⏳ Hurry! Offer ends in: <span className="timer">{formatTime(timeLeft)}</span>
-          </>
-        ) : (
-          <span style={{ color: '#fff' }}>❌ Offer expired!</span>
-        )}
-      </div>
+        <div className="offer-banner">
+          {timeLeft > 0 ? (
+            <>
+              ⏳ Hurry! Offer ends in: <span className="timer">{formatTime(timeLeft)}</span>
+            </>
+          ) : (
+            <span style={{ color: '#fff' }}>❌ Offer expired!</span>
+          )}
+        </div>
 
-      <div className="chocolate-items">
-        {currentItems.map((product) => (
-          <div key={product.name} className="chocolate-item">
-            <img src={product.image} alt={product.name} className="chocolate-image" />
-            <h3 className="chocolate-name">{product.name}</h3>
-            <p className="chocolate-price">₹{product.price}</p>
-            <p className="chocolate-description">{product.description}</p>
-            <button onClick={() => dispatch(addToCart(product))}>
-              Add To Cart 🛒
-            </button>
-          </div>
-        ))}
-      </div>
+        <div className="chocolate-items">
+          {currentItems.map((product) => (
+            <div key={product.name} className="chocolate-item">
+              <img src={product.image} alt={product.name} className="chocolate-image" />
+              <h3 className="chocolate-name">{product.name}</h3>
+              <p className="chocolate-price">₹{product.price}</p>
+              <p className="chocolate-description">{product.description}</p>
+              <button
+  onClick={() => {
+    dispatch(addToCart(product));
+    toast.success(`${product.name} added to cart!`, {
+      position: 'top-right',
+      autoClose: 1500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
+      theme: 'colored',
+    });
+  }}
+>
+  Add To Cart 🛒
+</button>
 
-      <div className="pagination">
-        <button
-          onClick={handlePrev}
-          disabled={currentPage === 1}
-          className="pagination-button nav1"
-        >
-          ◀ Prev
-        </button>
+            </div>
+          ))}
+        </div>
 
-        {[...Array(totalPages)].map((_, index) => (
+        <div className="pagination">
           <button
-            key={index}
-            onClick={() => setCurrentPage(index + 1)}
-            className={`pagination-button ${currentPage === index + 1 ? 'active' : ''}`}
+            onClick={handlePrev}
+            disabled={currentPage === 1}
+            className="pagination-button pagination-button-prev"
           >
-            {index + 1}
+            Previous
           </button>
-        ))}
 
-        <button
-          onClick={handleNext}
-          disabled={currentPage === totalPages}
-          className="pagination-button nav2"
-        >
-          Next ▶
-        </button>
+          {[...Array(totalPages)].map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentPage(index + 1)}
+              className={`pagination-button ${currentPage === index + 1 ? 'active' : ''}`}
+            >
+              {index + 1}
+            </button>
+          ))}
+
+          <button
+            onClick={handleNext}
+            disabled={currentPage === totalPages}
+            className="pagination-button pagination-button-next"
+          >
+            Next
+          </button>
+        </div>
       </div>
-    </div>
-    
-      {/* Footer Section */}
-     <footer className="footer">
-  <div className="footer-top">
-    <h3 className="footer-title"> 🧺 BigBasket- All Items Are Available Here!🙂</h3>
-    <div className="footer-links">
-      <a href="/">Home</a>
-      <a href="/about">About Us</a>
-      <a href="/contact">Contact</a>
-      <a href="/orders">Orders</a>
-    </div>
-  </div>
+<ToastContainer />
 
-  <div className="footer-bottom">
-    <div className="footer-socials">
-      <i className="fab fa-facebook-f"></i>
-      <i className="fab fa-instagram"></i>
-      <i className="fab fa-youtube"></i>
-    </div>
-    <p className="footer-copy">© 2025 FoodsZone. All Rights Reserved By Ashvita Kapat</p>
-  </div>
-</footer>
-</>
+      {/* Footer Section */}
+      <footer className="footer">
+        <div className="footer-top">
+          <h3 className="footer-title"> 🧺 BigBasket- All Items Are Available Here!🙂</h3>
+          <div className="footer-links">
+            <a href="/">Home</a>
+            <a href="/about">About Us</a>
+            <a href="/contact">Contact</a>
+            <a href="/orders">Orders</a>
+          </div>
+        </div>
+
+        <div className="footer-bottom">
+          <div className="footer-socials">
+            <i className="fab fa-facebook-f"></i>
+            <i className="fab fa-instagram"></i>
+            <i className="fab fa-youtube"></i>
+          </div>
+          <p className="footer-copy">© 2025 FoodsZone. All Rights Reserved By Ashvita Kapat</p>
+        </div>
+      </footer>
+    </>
   );
 };
 

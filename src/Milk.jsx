@@ -1,20 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { addToCart } from './store'; // adjust path if needed
+import './Milk.css'; // styling file
+import './Footer.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './Milk.css'; // styling file
+
 
 const Milk = () => {
   const dispatch = useDispatch();
   const milkProducts = useSelector((state) => state.products.milk);
 
- useEffect(() => {
-  toast.info('🧃 Welcome to the Milk Section!');
-}, [currentPage]); // now it shows when page changes
-
-
-  // ✅ Pagination setup
+  // Pagination setup
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
   const totalPages = Math.ceil(milkProducts.length / itemsPerPage);
@@ -22,7 +19,13 @@ const Milk = () => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = milkProducts.slice(indexOfFirstItem, indexOfLastItem);
 
-  // ✅ Countdown Timer setup (22h 30m 5s)
+  // Debug logs to verify cards per page
+  console.log('milkProducts:', milkProducts);
+  console.log('totalPages:', totalPages);
+  console.log('currentPage:', currentPage);
+  console.log('currentItems:', currentItems);
+
+  // Countdown Timer setup (22h 30m 5s)
   const [timeLeft, setTimeLeft] = useState(22 * 3600 + 30 * 60 + 5);
   useEffect(() => {
     const timer = setInterval(() => {
@@ -37,11 +40,19 @@ const Milk = () => {
     return `${h}h ${m}m ${s}s`;
   };
 
-  // ✅ Add to cart with toast
+  // Add to cart without toast
   const handleAddToCart = (product) => {
-    dispatch(addToCart(product));
-    toast.success(`${product.name} added to cart 🛒`);
-  };
+  dispatch(addToCart(product));
+  toast.success(`${product.name} added to cart!`, {
+    position: 'top-right',
+    autoClose: 1500,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: false,
+    draggable: true,
+    theme: 'colored',
+  });
+};
 
   return (
     <>
@@ -63,6 +74,7 @@ const Milk = () => {
               <h3 className="milk-name">{product.name}</h3>
               <p className="milk-price">₹{product.price}</p>
               <p className="milk-description">{product.description}</p>
+              
               <button onClick={() => handleAddToCart(product)} className="add-to-cart-btn">
                 Add to Cart
               </button>
@@ -71,29 +83,52 @@ const Milk = () => {
         </div>
 
         <div className="pagination">
-          <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1}>
-            Prev
+          <button
+            onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+            disabled={currentPage === 1}
+            className="pagination-button pagination-button-prev"
+          >
+            Previous
           </button>
           {[...Array(totalPages)].map((_, i) => (
-            <button key={i} onClick={() => setCurrentPage(i + 1)} className={currentPage === i + 1 ? 'active' : ''}>
+            <button
+              key={i}
+              onClick={() => setCurrentPage(i + 1)}
+              className={`pagination-button ${currentPage === i + 1 ? 'active' : ''}`}
+            >
               {i + 1}
             </button>
           ))}
-          <button onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages}>
+          <button
+            onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+            disabled={currentPage === totalPages}
+            className="pagination-button pagination-button-next"
+          >
             Next
           </button>
         </div>
-        <button onClick={() => toast.info('🧃 Test Toast!')}>Test Toast</button>
-
       </div>
+      <ToastContainer />
 
-      {/* Toasts */}
-      <ToastContainer position="top-left" autoClose={2000} theme="colored" />
-      
 
-      {/* Footer */}
       <footer className="footer">
-        <p>© 2025 TrendyMart. All rights reserved.</p>
+        <div className="footer-top">
+          <h3 className="footer-title"> 🧺 BigBasket - All Items Are Available Here! 🙂</h3>
+          <div className="footer-links">
+            <a href="/">Home</a>
+            <a href="/about">About Us</a>
+            <a href="/contact">Contact</a>
+            <a href="/orders">Orders</a>
+          </div>
+        </div>
+        <div className="footer-bottom">
+          <div className="footer-socials">
+            <i className="fab fa-facebook-f"></i>
+            <i className="fab fa-instagram"></i>
+            <i className="fab fa-youtube"></i>
+          </div>
+          <p className="footer-copy">© 2025 FoodsZone. All Rights Reserved By Ashvita Kapat</p>
+        </div>
       </footer>
     </>
   );

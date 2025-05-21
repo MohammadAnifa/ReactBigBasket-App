@@ -147,7 +147,7 @@ const Veg = () => {
         )}
       </div>
 
-      <div className="pagination">
+      <div className="pagination-btn">
         <button className="pagination-button1" onClick={handlePreviousPage} disabled={currentPage === 1}>
           Previous
         </button>

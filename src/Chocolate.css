@@ -1,7 +1,55 @@
+/* Global styling */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: #f4f4f4;
+  font-size: 16px;
+  color: #333;
+  padding-top: 80px; /* Consistent with Milk and NonVeg */
+}
+
 /* Basic chocolate styling */
 .chocolate-container {
   padding: 20px;
   background-color: #fff8f5;
+  max-width: 1200px; /* Consistent with Milk and NonVeg */
+  margin: 0 auto;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+}
+
+h2 {
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+.offer-banner {
+  background-color: palevioletred;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 8px;
+  margin: 20px auto;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: bold;
+  max-width: 400px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.timer {
+  background: #fff;
+  color: #8e44ad;
+  padding: 5px 10px;
+  border-radius: 6px;
+  margin-left: 8px;
+  font-weight: bold;
 }
 
 .chocolate-items {
@@ -19,7 +67,7 @@
   height: 350px; /* Increased height to fit description */
   text-align: center;
   background-color: #fff;
-  box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
   display: flex;
   flex-direction: column;
@@ -34,7 +82,8 @@
 }
 
 @keyframes blink {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 10px rgba(255, 105, 180, 0.2);
   }
   50% {
@@ -62,7 +111,7 @@
   margin-bottom: 12px;
 }
 
-/* Description styling (newly added) */
+/* Description styling */
 .chocolate-description {
   font-size: 0.85rem;
   color: #4a4a4a;
@@ -93,6 +142,69 @@ button:hover {
   background-color: #27ae60;
 }
 
+.chocolate-container .pagination {
+  display: flex !important;
+  justify-content: center !important;    /* Center the buttons horizontally */
+  align-items: center !important;        /* Vertically align buttons */
+  gap: 8px !important;                   /* Space between buttons */
+  margin-top: 20px !important;
+  padding: 10px 0 !important;
+  width: 100% !important;
+  min-height: 40px !important;           /* Ensure the container has a minimum height */
+  background-color: transparent !important; /* Remove any background */
+  border: none !important;               /* Remove any border */
+}
+
+.chocolate-container .pagination .pagination-button,
+.chocolate-container .pagination .pagination-button-prev,
+.chocolate-container .pagination .pagination-button-next {
+  padding: 6px 0 !important;             /* Reduced padding to fit more buttons */
+  font-size: 14px !important;            /* Slightly larger font for readability */
+  width: 40px !important;                /* Reduced width to fit all buttons */
+  text-align: center !important;
+  background-color: #e0e0e0 !important;  /* Light gray background for page numbers */
+  color: #333 !important;
+  border: 1px solid #ccc !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  transition: background-color 0.3s ease, color 0.3s ease !important;
+  display: inline-block !important;      /* Ensure buttons are visible */
+  visibility: visible !important;        /* Force visibility */
+  box-sizing: border-box !important;     /* Ensure padding is included in width */
+}
+
+.chocolate-container .pagination .pagination-button.active {
+  background-color: #007bff !important;  /* Blue background for active page */
+  color: white !important;
+  font-weight: bold !important;
+  border: 1px solid #007bff !important;
+  transform: scale(1.05) !important;     /* Slightly scale up the active button */
+}
+
+.chocolate-container .pagination .pagination-button-prev,
+.chocolate-container .pagination .pagination-button-next {
+  background-color: #a0522d !important;  /* Brown background for Previous/Next */
+  color: white !important;
+  border: none !important;
+  width: 80px !important;                /* Slightly wider for Previous/Next */
+}
+
+.chocolate-container .pagination .pagination-button-prev:hover,
+.chocolate-container .pagination .pagination-button-next:hover {
+  background-color: #8b4513 !important;  /* Darker brown on hover */
+}
+
+.chocolate-container .pagination .pagination-button:hover {
+  background-color: #d0d0d0 !important;  /* Slightly darker gray on hover for page numbers */
+}
+
+.chocolate-container .pagination .pagination-button:disabled,
+.chocolate-container .pagination .pagination-button-prev:disabled,
+.chocolate-container .pagination .pagination-button-next:disabled {
+  background-color: #cccccc !important;  /* Gray out disabled buttons */
+  cursor: not-allowed !important;
+}
+
 /* Responsive design */
 @media (max-width: 1024px) {
   .chocolate-items {
@@ -104,50 +216,37 @@ button:hover {
   .chocolate-items {
     grid-template-columns: repeat(1, 1fr);
   }
+
+  .chocolate-container .pagination {
+    gap: 6px !important;                 /* Slightly reduce gap on smaller screens */
+    padding: 10px 5px !important;        /* Reduce padding for smaller screens */
+    flex-wrap: wrap !important;          /* Allow wrapping on smaller screens */
+  }
+
+  .chocolate-container .pagination .pagination-button,
+  .chocolate-container .pagination .pagination-button-prev,
+  .chocolate-container .pagination .pagination-button-next {
+    padding: 5px 0 !important;           /* Slightly smaller padding */
+    font-size: 12px !important;          /* Smaller font size */
+    width: 36px !important;              /* Smaller width for page numbers */
+  }
+
+  .chocolate-container .pagination .pagination-button-prev,
+  .chocolate-container .pagination .pagination-button-next {
+    width: 70px !important;              /* Slightly smaller width for Previous/Next */
+  }
+}.Toastify__toast-container {
+  z-index: 9999 !important;
 }
-.offer-banner {
-  background-color:palevioletred;
-  color: white;
-  padding: 10px 15px;
+
+.Toastify__toast {
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 14px;
   border-radius: 8px;
-  margin: 20px auto;
-  text-align: center;
-  font-size: 1rem;
-  font-weight: bold;
-  max-width: 400px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.timer {
-  background: #fff;
-  color: #8e44ad;
-  padding: 5px 10px;
-  border-radius: 6px;
-  margin-left: 8px;
-  font-weight: bold;
-}
-
-.pagination {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.pagination-button {
-  background-color: #f3e5f5;
-  border: none;
-  margin: 0 5px;
-  padding: 8px 14px;
-  cursor: pointer;
-  border-radius: 6px;
-  font-weight: bold;
-}
-
-.pagination-button:hover {
-  background-color: #ce93d8;
-}
-
-.pagination-button.active {
-  background-color: #ab47bc;
+.Toastify__toast--success {
+  background: #28a745 !important;
   color: white;
 }
