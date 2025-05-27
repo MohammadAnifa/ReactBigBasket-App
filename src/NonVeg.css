@@ -136,7 +136,7 @@ body {
   display: flex !important;
   justify-content: center !important;    /* Center the buttons horizontally */
   align-items: center !important;        /* Vertically align buttons */
-  gap: 8px !important;                   /* Space between buttons */
+  gap: 0px !important;                   /* No gap to make buttons touch, as in /nonveg screenshot */
   margin-top: 20px !important;
   padding: 10px 0 !important;
   width: 100% !important;
@@ -148,17 +148,20 @@ body {
 .nonveg-container .pagination .pagination-button,
 .nonveg-container .pagination .pagination-button3,
 .nonveg-container .pagination .pagination-button4 {
-  padding: 6px 0 !important;             /* Reduced padding to fit more buttons */
-  font-size: 14px !important;            /* Slightly larger font for readability */
-  width: 40px !important;                /* Reduced width to fit all buttons */
+  width: 24px !important;                /* Medium size for numbered buttons */
+  height: 24px !important;               /* Medium size for numbered buttons */
+  padding: 0 !important;                 /* No padding to control size with width and height */
+  font-size: 12px !important;            /* Adjusted font size for medium buttons */
   text-align: center !important;
   background-color: #e0e0e0 !important;  /* Light gray background for page numbers */
   color: #333 !important;
   border: 1px solid #ccc !important;
-  border-radius: 4px !important;
+  border-radius: 4px !important;         /* Adjusted for medium size */
   cursor: pointer !important;
   transition: background-color 0.3s ease, color 0.3s ease !important;
-  display: inline-block !important;      /* Ensure buttons are visible */
+  display: flex !important;              /* Use flex to center text */
+  align-items: center !important;
+  justify-content: center !important;    /* Center text horizontally and vertically */
   visibility: visible !important;        /* Force visibility */
   box-sizing: border-box !important;     /* Ensure padding is included in width */
 }
@@ -176,7 +179,8 @@ body {
   background-color: #a0522d !important;  /* Brown background for Previous/Next */
   color: white !important;
   border: none !important;
-  width: 80px !important;                /* Slightly wider for Previous/Next */
+  width: 90px !important;                /* Retain width for Previous/Next */
+  height: 24px !important;               /* Match height of numbered buttons */
 }
 
 .nonveg-container .pagination .pagination-button3:hover,
@@ -230,7 +234,7 @@ body {
 
 @media (max-width: 500px) {
   .nonveg-container .pagination {
-    gap: 6px !important;                 /* Slightly reduce gap on smaller screens */
+    gap: 0px !important;                 /* Keep no gap on smaller screens */
     padding: 10px 5px !important;        /* Reduce padding for smaller screens */
     flex-wrap: wrap !important;          /* Allow wrapping on smaller screens */
   }
@@ -238,13 +242,14 @@ body {
   .nonveg-container .pagination .pagination-button,
   .nonveg-container .pagination .pagination-button3,
   .nonveg-container .pagination .pagination-button4 {
-    padding: 5px 0 !important;           /* Slightly smaller padding */
-    font-size: 12px !important;          /* Smaller font size */
-    width: 36px !important;              /* Smaller width for page numbers */
+    width: 20px !important;              /* Slightly smaller for smaller screens */
+    height: 20px !important;             /* Slightly smaller for smaller screens */
+    font-size: 10px !important;          /* Smaller font size */
   }
 
   .nonveg-container .pagination .pagination-button3,
   .nonveg-container .pagination .pagination-button4 {
-    width: 70px !important;              /* Slightly smaller width for Previous/Next */
+    width: 80px !important;              /* Slightly smaller width for Previous/Next */
+    height: 20px !important;             /* Match height of numbered buttons */
   }
 }
