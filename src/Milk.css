@@ -5,16 +5,32 @@ body {
   width: 100%;
   box-sizing: border-box;
 }
-
-.milk-container {
-  max-width: 1200px;
-  margin: 0;
-  padding: 20px 0;
-  width: 100%;
-  box-sizing: border-box;
-  position: relative;
+.milk-container h2 {
+  text-align: center;
+  font-size: 2rem;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+}
+.offer-banner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ff6f61;
+  color: white;
+  padding: 8px; /* Reduced padding for a smaller size */
+  margin: 0 auto 15px auto; /* Reduced bottom margin */
+  border-radius: 4px; /* Slightly smaller border-radius */
+  width: fit-content;
+  max-width: 0%; /* Ensure it doesn't stretch too wide */
+  font-size: 0.9rem; /* Smaller font size for a medium look */
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1); /* Slightly smaller shadow */
 }
 
+.timer {
+  font-weight: 600;
+  margin-left: 4px; /* Reduced margin for compactness */
+}
 .content-wrapper {
   display: flex;
   gap: 80px;
@@ -35,6 +51,25 @@ body {
   margin: 0;
   position: relative;
   left: 0; /* Force to the left edge */
+}
+
+.search-section {
+  margin-bottom: 20px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px;
+  font-size: 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.search-input:focus {
+  border-color: #ff385c;
+  box-shadow: 0 0 5px rgba(255, 56, 92, 0.3);
 }
 
 .sidebar h3 {
@@ -97,7 +132,9 @@ body {
   flex: 1;
   display: flex;
   justify-content: flex-start;
+ 
 }
+
 
 .milk-row {
   display: flex;
@@ -106,19 +143,23 @@ body {
   justify-content: flex-start;
   width: 100%;
 }
-
 .milk-item {
   width: 220px;
-  min-height: 350px;
+  height: 340px; /* fixed height to ensure uniformity */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border: none;
-  padding: 15px;
+  padding: 10px;
   border-radius: 8px;
   text-align: center;
   background-color: #fff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.milk-item:hover{
+  transform: scale(1.05);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+  border-color: #e91e63;
+  
 }
 
 .milk-image {
@@ -143,11 +184,16 @@ body {
 }
 
 .milk-description {
-  font-size: 14px;
+  font-size: 13px;
   color: #666;
-  margin-bottom: 10px;
-  flex-grow: 1;
+  margin-bottom: 8px;
+  line-height: 1.2;
+  height: 38px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-left: 4px solid #e91e63;
 }
+
 
 .button-wrapper {
   margin-top: auto;
@@ -156,19 +202,19 @@ body {
 .add-to-cart-btn {
   background-color: #ff385c;
   color: white;
-  padding: 10px;
+  padding: 8px;
   width: 100%;
   border: none;
-  border-radius: 5px;
+  border-radius: 4px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
   text-transform: uppercase;
   transition: background-color 0.3s;
 }
 
 .add-to-cart-btn:hover {
-  background-color: #e91e63;
+  background-color:skyblue;
 }
 
 .offer-banner {
@@ -211,8 +257,8 @@ body {
 .pagination-button-next {
   background-color: #8b5a2b;
   color: white;
-  width: 90px;
-  height: 24px;
+  width: Auto;
+  height: auto;
 }
 
 .pagination-button-prev:disabled,
@@ -277,5 +323,31 @@ body {
   .pagination-button-next {
     width: 80px;
     height: 20px;
+  }
+}search-section {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.search-input {
+  width: 300px;
+  padding: 10px;
+  font-size: 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.search-input:focus {
+  border-color: #ff385c;
+  box-shadow: 0 0 5px rgba(255, 56, 92, 0.3);
+}
+
+/* Responsive design for search input */
+@media (max-width: 768px) {
+  .search-input {
+    width: 100%;
   }
 }

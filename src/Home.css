@@ -385,4 +385,10 @@ body {
   background: var(--primary-dark);
   transform: translateY(-2px);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}/* Home.css */
+.no-results {
+  font-size: 1.2rem;
+  color: #666;
+  text-align: center;
+  margin: 20px 0;
 }

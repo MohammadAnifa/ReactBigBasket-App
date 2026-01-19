@@ -291,7 +291,7 @@ body {
 }
 
 .veg-button:hover {
-  background: linear-gradient(90deg, #fb7185, #f43f5e);
+  background:gray;
   transform: scale(1.03);
 }
 
@@ -405,4 +405,90 @@ body {
 }
 .pagination-button2{
   width:60px;
+}.search-section {
+  margin: 20px 0;
+  text-align: center;
+}
+/* Existing search-section styles */
+.search-section {
+  margin: 20px 0;
+  text-align: center;
+}
+
+/* Wrapper for search input and icon */
+.search-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 300px;
+  max-width: 100%;
+}
+
+.search-input {
+  padding: 10px 10px 10px 35px; /* Add padding-left for icon */
+  width: 100%;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.search-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+.search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: #666;
+}
+
+/* Filter section styles */
+.filter-section {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.filter-checkboxes {
+  display: flex;
+  flex-direction: column; /* Stack checkboxes vertically */
+  align-items: center; /* Center checkboxes */
+  gap: 10px; /* Space between checkboxes */
+  padding: 10px;
+}
+
+.filter-checkbox {
+  display: flex;
+  align-items: center;
+  width: 200px; /* Fixed width to prevent movement */
+  justify-content: space-between; /* Align checkbox and label */
+}
+
+.checkbox-label {
+  font-size: 16px;
+  color: #333;
+}
+
+.filter-checkboxes button {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.filter-checkboxes button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.filter-checkboxes button:hover:not(:disabled) {
+  background-color: #0056b3;
 }

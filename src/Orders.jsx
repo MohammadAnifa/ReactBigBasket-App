@@ -39,7 +39,11 @@ const Orders = () => {
                 <div className="items-container">
                   {order.items.map((item, idx) => (
                     <div key={`${order.orderId}-${idx}`} className="item-card">
-                      <img src={item.image} alt={item.name} className="item-image" />
+                      <img
+                      src={`http://localhost:4040${item.imagepath}`}
+                      className="cart-item-image"
+                      alt={item.name}
+                    />
                       <div className="item-info">
                         <p className="item-name">{item.name}</p>
                         <p className="item-price">₹{item.price} × {item.quantity}</p>

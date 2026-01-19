@@ -256,4 +256,30 @@ button:hover {
 .Toastify__toast--success {
   background: #28a745 !important;
   color: white;
+}.search-section {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.search-input {
+  width: 300px;
+  padding: 10px;
+  font-size: 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.search-input:focus {
+  border-color: #ff385c;
+  box-shadow: 0 0 5px rgba(255, 56, 92, 0.3);
+}
+
+/* Responsive design for search input */
+@media (max-width: 768px) {
+  .search-input {
+    width: 100%;
+  }
 }

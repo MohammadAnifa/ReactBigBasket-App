@@ -170,7 +170,11 @@ function Cart() {
             <tbody>
               {cartObjects.map((item, index) => (
                 <tr key={index} className="cart-item">
-                  <td><img src={item.image} alt={item.name} className="cart-item-image" /></td>
+                  <td> <img
+                      src={`http://localhost:4040${item.imagepath}`}
+                      className="cart-item-image"
+                      alt={item.name}
+                    /></td>
                   <td>{item.name}</td>
                   <td>${item.price}</td>
                   <td>

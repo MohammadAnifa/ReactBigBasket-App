@@ -1,57 +1,38 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { addToCart } from './store'; // adjust path if needed
-import './Milk.css'; // styling file
-import './Footer.css';
+import { addToCart } from './store';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import './Milk.css';
+import './Footer.css';
+
+const ITEMS_PER_PAGE = 4;
 
 const Milk = () => {
   const dispatch = useDispatch();
   const milkProducts = useSelector((state) => state.products.milk);
 
-  // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 4;
-  
-  // Filter state
-  const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
-
-  // Define price ranges (matches screenshot)
-  const priceRanges = [
-    { label: 'Under ₹50', min: 0, max: 50 },
-    { label: '₹50 - ₹100', min: 50, max: 100 },
-    { label: 'Over ₹100', min: 100, max: Infinity },
-  ];
-
-  // Filter products based on price ranges
-  const filteredProducts = milkProducts.filter((product) => {
-    const priceMatch = selectedPriceRanges.length === 0 || selectedPriceRanges.some((range) =>
-      product.price >= priceRanges.find((pr) => pr.label === range).min &&
-      product.price < priceRanges.find((pr) => pr.label === range).max
-    );
-    return priceMatch;
+  const [priceFilters, setPriceFilters] = useState({
+    '10-50': false,
+    '51-100': false,
+    '101-200': false,
+    '201-500': false,
   });
+  const [searchQuery, setSearchQuery] = useState('');
+  const [timeLeft, setTimeLeft] = useState(22 * 3600 + 30 * 60 + 5); // 22h 30m 5s
 
-  // Pagination for filtered products
-  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredProducts.slice(indexOfFirstItem, indexOfLastItem);
-
-  // Reset to page 1 when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [selectedPriceRanges]);
+  }, [priceFilters, searchQuery]);
 
-  // Countdown Timer setup (22h 29m 44s as per screenshot)
-  const [timeLeft, setTimeLeft] = useState(22 * 3600 + 29 * 60 + 44);
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeLeft((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
+      setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
     }, 1000);
     return () => clearInterval(timer);
   }, []);
+
   const formatTime = (seconds) => {
     const h = Math.floor(seconds / 3600);
     const m = Math.floor((seconds % 3600) / 60);
@@ -59,124 +40,186 @@ const Milk = () => {
     return `${h}h ${m}m ${s}s`;
   };
 
-  // Handle price range checkbox changes
-  const handlePriceChange = (range) => {
-    setSelectedPriceRanges((prev) =>
-      prev.includes(range) ? prev.filter((r) => r !== range) : [...prev, range]
-    );
+  const handlePriceFilterChange = (range) => {
+    setPriceFilters((prev) => ({
+      ...prev,
+      [range]: !prev[range],
+    }));
   };
 
-  // Clear all filters
   const handleClearAll = () => {
-    setSelectedPriceRanges([]);
+    setPriceFilters({
+      '10-50': false,
+      '51-100': false,
+      '101-200': false,
+      '201-500': false,
+    });
+    setSearchQuery('');
   };
 
-  // Add to cart
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
   const handleAddToCart = (product) => {
     dispatch(addToCart(product));
     toast.success(`${product.name} added to cart!`, {
       position: 'top-right',
       autoClose: 1500,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: false,
-      draggable: true,
       theme: 'colored',
     });
   };
 
+  const filteredProducts = milkProducts.filter((product) => {
+    const searchMatch =
+      searchQuery === '' ||
+      (product.name?.toLowerCase().includes(searchQuery.toLowerCase()) || false) ||
+      (product.description?.toLowerCase().includes(searchQuery.toLowerCase()) || false);
+
+    const selectedRanges = Object.keys(priceFilters).filter((range) => priceFilters[range]);
+    const priceMatch =
+      selectedRanges.length === 0 ||
+      selectedRanges.some((range) => {
+        const [min, max] = range.split('-').map(Number);
+        return product.price >= min && product.price <= max;
+      });
+
+    return searchMatch && priceMatch;
+  });
+
+  const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
+  const currentItems = filteredProducts.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
   return (
     <>
       <div className="milk-container">
-        <h2>Milk Products</h2>
+        <h2>Milk Products 🥛</h2>
+
+        <div className="search-section">
+          <input
+            type="text"
+            placeholder="Search milk products... 🔍"
+            value={searchQuery}
+            onChange={handleSearchChange}
+            className="search-input"
+            aria-label="Search milk products"
+          />
+        </div>
 
         <div className="offer-banner">
           {timeLeft > 0 ? (
-            <>HURRY! Offer ends in <span className="timer">{formatTime(timeLeft)}</span></>
+            <>⏳ Hurry! Offer ends in: <span className="timer">{formatTime(timeLeft)}</span></>
           ) : (
-            <>❌ Offer expired!</>
+            <span style={{ color: '#fff' }}>❌ Offer expired!</span>
           )}
         </div>
 
         <div className="content-wrapper">
-          {/* Filter Sidebar (Single Card) */}
+          {/* 💰 Price Filter Sidebar */}
           <div className="sidebar">
-            <h3>Filters</h3>
+            <h3>PRICE FILTER</h3>
             <div className="filter-section">
-              <h4>Price Range</h4>
-              {priceRanges.map((range) => (
-                <label key={range.label} className="filter-label">
+              {Object.keys(priceFilters).map((range) => (
+                <label key={range} className="filter-label">
                   <input
                     type="checkbox"
-                    checked={selectedPriceRanges.includes(range.label)}
-                    onChange={() => handlePriceChange(range.label)}
+                    checked={priceFilters[range]}
+                    onChange={() => handlePriceFilterChange(range)}
+                    aria-label={`Filter by price range ${range}`}
                   />
-                  {range.label}
+                  {range}
                 </label>
               ))}
-              <button onClick={handleClearAll} className="clear-all-btn">
-                Clear All
-              </button>
             </div>
+            <button
+              onClick={handleClearAll}
+              disabled={
+                Object.values(priceFilters).every((v) => !v) && searchQuery === ''
+              }
+              className="clear-all-btn"
+              aria-label="Clear all filters"
+            >
+              Clear Filters
+            </button>
           </div>
 
-          {/* Product Cards (Aligned to the left) */}
+          {/* 🧺 Milk Product Cards */}
           <div className="milk-items">
             {currentItems.length > 0 ? (
               <div className="milk-row">
                 {currentItems.map((product) => (
                   <div key={product.name} className="milk-item">
-                    <img src={product.image} alt={product.name} className="milk-image" />
+                    <img
+                      src={`http://localhost:4040${product.imagepath}`}
+                      onError={(e) => {
+                        e.target.src = '/placeholder.jpg';
+                      }}
+                      alt={product.name}
+                      className="milk-image"
+                    />
                     <h3 className="milk-name">{product.name}</h3>
                     <p className="milk-price">₹{product.price}</p>
-                    <p className="milk-description">{product.description}</p>
-                    <div className="button-wrapper">
-                      <button onClick={() => handleAddToCart(product)} className="add-to-cart-btn">
-                        Add to Cart
-                      </button>
-                    </div>
+                    <button
+                      onClick={() => handleAddToCart(product)}
+                      className="add-to-cart-btn"
+                      aria-label={`Add ${product.name} to cart`}
+                    >
+                      ADD TO CART 🛒
+                    </button>
                   </div>
                 ))}
               </div>
             ) : (
-              <p>No products match the selected filters.</p>
+              <p>No products match the selected filters or search query.</p>
             )}
           </div>
         </div>
 
-        <div className="pagination">
-          <button
-            onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-            disabled={currentPage === 1}
-            className="pagination-button pagination-button-prev"
-          >
-            Previous
-          </button>
-          {[...Array(totalPages)].map((_, i) => (
+        {/* 📄 Pagination */}
+        {filteredProducts.length > 0 && (
+          <div className="pagination">
             <button
-              key={i}
-              onClick={() => setCurrentPage(i + 1)}
-              className={`pagination-button pagination-button-number ${
-                currentPage === i + 1 ? 'active' : ''
-              }`}
+              onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+              disabled={currentPage === 1}
+              className="pagination-button pagination-button-prev"
+              aria-label="Previous page"
             >
-              {i + 1}
+              Previous
             </button>
-          ))}
-          <button
-            onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-            disabled={currentPage === totalPages}
-            className="pagination-button pagination-button-next"
-          >
-            Next
-          </button>
-        </div>
+            {[...Array(totalPages)].map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentPage(i + 1)}
+                className={`pagination-button pagination-button-number ${
+                  currentPage === i + 1 ? 'active' : ''
+                }`}
+                aria-label={`Go to page ${i + 1}`}
+              >
+                {i + 1}
+              </button>
+            ))}
+            <button
+              onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+              disabled={currentPage === totalPages}
+              className="pagination-button pagination-button-next"
+              aria-label="Next page"
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
+
+      {/* 🔔 Toasts */}
       <ToastContainer />
 
+      {/* 🦶 Footer */}
       <footer className="footer">
         <div className="footer-top">
-          <h3 className="footer-title"> 🧺 BigBasket - All Items Are Available Here! 🙂</h3>
+          <h3 className="footer-title">🧺 BigBasket - All Items Are Available Here! 🙂</h3>
           <div className="footer-links">
             <a href="/">Home</a>
             <a href="/about">About Us</a>

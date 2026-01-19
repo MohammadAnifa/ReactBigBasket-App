@@ -27,17 +27,23 @@ body {
   text-align: center;
   font-weight: 700;
 }
-
 .offer-banner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: #ff6f61;
   color: white;
-  padding: 10px 15px;
-  border-radius: 8px;
-  margin: 20px auto;
-  text-align: center;
-  font-size: 1rem;
-  font-weight: bold;
-  max-width: 400px;
+  padding: 10px;
+  margin: 0 auto 20px auto;
+  border-radius: 5px;
+  width: fit-content;
+  max-width: 100%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.timer {
+  font-weight: 600;
+  margin-left: 5px;
 }
 
 .price-filter {
@@ -251,5 +257,44 @@ body {
   .nonveg-container .pagination .pagination-button4 {
     width: 80px !important;              /* Slightly smaller width for Previous/Next */
     height: 20px !important;             /* Match height of numbered buttons */
+  }
+}/* Search Section */
+.search-section {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.search-input {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.search-input:focus {
+  border-color: #ff6f61;
+  box-shadow: 0 0 5px rgba(255, 111, 97, 0.3);
+}
+
+.search-input::placeholder {
+  color: #999;
+}
+
+/* Adjust layout for smaller screens */
+@media (max-width: 768px) {
+  .search-input {
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 500px) {
+  .search-input {
+    max-width: 250px;
+    padding: 8px;
+    font-size: 0.9rem;
   }
 }

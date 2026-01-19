@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { addToCart } from './store';
+import { addToCart, fetchProducts } from './store';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import "./Veg.css";
@@ -8,49 +8,51 @@ import "./Footer.css";
 
 const Veg = () => {
   const dispatch = useDispatch();
-  const allVegItems = useSelector((state) => state.products.Veg);
+  const { veg, loading, error } = useSelector((state) => state.products);
 
   const [filteredVegItems, setFilteredVegItems] = useState([]);
   const [selectedPrices, setSelectedPrices] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [timer, setTimer] = useState(22 * 3600 + 29 * 60 + 6); // 23h 30m 6s
-
+  const [timer, setTimer] = useState(22 * 3600 + 29 * 60 + 6); // 22h 29m 6s
   const itemsPerPage = 4;
 
   useEffect(() => {
+    dispatch(fetchProducts());
+  }, [dispatch]);
+
+  useEffect(() => {
     const countdown = setInterval(() => {
-      setTimer((prev) => {
-        if (prev === 0) {
-          clearInterval(countdown);
-          return 0;
-        }
-        return prev - 1;
-      });
+      setTimer((prev) => (prev <= 0 ? 0 : prev - 1));
     }, 1000);
     return () => clearInterval(countdown);
   }, []);
 
   useEffect(() => {
-    let filtered = [...allVegItems];
+    let filtered = [...veg];
+
+    if (searchQuery.trim()) {
+      filtered = filtered.filter((item) =>
+        item.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
 
     if (selectedPrices.length > 0) {
-      filtered = filtered.filter((item) => {
-        return selectedPrices.some((priceRange) => {
-          if (priceRange === "0-30") return item.price >= 0 && item.price <= 30;
-          if (priceRange === "31-60") return item.price >= 31 && item.price <= 60;
-          if (priceRange === "61-100") return item.price >= 61 && item.price <= 100;
-          if (priceRange === "100+") return item.price > 100;
+      filtered = filtered.filter((item) =>
+        selectedPrices.some((range) => {
+          if (range === "0-30") return item.price >= 0 && item.price <= 30;
+          if (range === "31-60") return item.price >= 31 && item.price <= 60;
+          if (range === "61-100") return item.price >= 61 && item.price <= 100;
+          if (range === "100+") return item.price > 100;
           return false;
-        });
-      });
+        })
+      );
     }
 
     setFilteredVegItems(filtered);
-    setCurrentPage((prev) => {
-      const newTotalPages = Math.ceil(filtered.length / itemsPerPage);
-      return prev > newTotalPages ? 1 : prev;
-    });
-  }, [allVegItems, selectedPrices]);
+    const totalPages = Math.ceil(filtered.length / itemsPerPage);
+    setCurrentPage((prev) => (prev > totalPages ? totalPages : prev));
+  }, [veg, selectedPrices, searchQuery]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -59,15 +61,21 @@ const Veg = () => {
 
   const handleCheckboxChange = (e) => {
     const { value, checked } = e.target;
-    if (checked) {
-      setSelectedPrices((prev) => [...prev, value]);
-    } else {
-      setSelectedPrices((prev) => prev.filter((v) => v !== value));
-    }
+    setSelectedPrices((prev) =>
+      checked ? [...prev, value] : prev.filter((v) => v !== value)
+    );
+    setCurrentPage(1);
   };
 
   const clearFilters = () => {
     setSelectedPrices([]);
+    setSearchQuery("");
+    setCurrentPage(1);
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(1);
   };
 
   const formatTime = (secs) => {
@@ -87,91 +95,139 @@ const Veg = () => {
 
   return (
     <div className="veg-container">
-      <h1 className="veg-title">Fresh Vegetables</h1>
+      <h1 className="veg-title">Fresh Vegetables 🫑</h1>
 
-      <div className="filter-section">
-        <h2 className="filter-title">Price</h2>
-        <div className="filter-checkboxes">
-          {["0-30", "31-60", "61-100", "100+"].map((range) => (
-            <label key={range} className="filter-checkbox">
-              <input
-                type="checkbox"
-                value={range}
-                checked={selectedPrices.includes(range)}
-                onChange={handleCheckboxChange}
-              />
-              <span className="checkbox-label">{range}</span>
-            </label>
-          ))}
-          <button onClick={clearFilters} disabled={selectedPrices.length === 0}>
-            Clear Filters
-          </button>
+      <div className="search-section">
+        <div className="search-wrapper">
+          <span className="search-icon"></span>
+          <input
+            type="text"
+            placeholder="Search vegetables....................                🔍"
+            value={searchQuery}
+            onChange={handleSearchChange}
+            className="search-input"
+          />
         </div>
       </div>
 
       <div className="offer-banner">
-        Limited Time Offer: Flat 20% Off! <span className="timer">⏰ {formatTime(timer)}</span>
+        Limited Time Offer: Flat 20% Off!{" "}
+        <span className="timer">⏰ {formatTime(timer)}</span>
       </div>
 
-      <div className="veg-products-section">
-        {currentItems.length === 0 ? (
-          <p style={{ color: "white", textAlign: "center", fontWeight: "bold" }}>
-            No vegetables match the selected filter range.
-          </p>
-        ) : (
-          currentItems.map((veg, index) => (
-            <div key={index} className="veg-item">
-              <img src={veg.image} alt={veg.name} className="veg-image" />
-              <p className="veg-price">₹{veg.price}</p>
-              <p className="veg-description">{veg.description}</p>
-              <h3 className="veg-name">{veg.name}</h3>
+      <div className="main-content">
+        <div className="filter-section">
+          <h2 className="filter-title">Price</h2>
+          <div className="filter-checkboxes">
+            {["0-30", "31-60", "61-100", "100+"].map((range) => (
+              <label key={range} className="filter-checkbox">
+                <input
+                  type="checkbox"
+                  value={range}
+                  checked={selectedPrices.includes(range)}
+                  onChange={handleCheckboxChange}
+                />
+                <span className="checkbox-label">{range}</span>
+              </label>
+            ))}
+            <button
+              onClick={clearFilters}
+              disabled={selectedPrices.length === 0 && searchQuery === ""}
+              className="clear-filter-button"
+            >
+              Clear Filters
+            </button>
+          </div>
+        </div>
+
+        <div className="products-container">
+          <div className="veg-products-section">
+            {loading ? (
+              <p style={{ color: "white", textAlign: "center", fontWeight: "bold" }}>
+                Loading vegetables...
+              </p>
+            ) : error ? (
+              <p style={{ color: "red", textAlign: "center", fontWeight: "bold" }}>
+                Error: {error}
+              </p>
+            ) : currentItems.length === 0 ? (
+              <p style={{ color: "white", textAlign: "center", fontWeight: "bold" }}>
+                No vegetables match the selected filter range or search query.
+              </p>
+            ) : (
+              currentItems.map((product, index) => (
+                <div key={index} className="veg-item">
+                  <img
+                    src={`http://localhost:4040${product.imagepath}`}
+                    onError={(e) => {
+                      console.error(`Failed to load image for ${product.name}: ${product.image}`);
+                      e.target.src = '/placeholder.jpg';
+                    }}
+                    alt={product.name}
+                    className="veg-image"
+                  />
+                  <div className="veg-content">
+                    <h3 className="veg-name">{product.name}</h3>
+                    <p className="veg-price">₹{product.price}</p>
+                    <p className="veg-description">{product.description}</p>
+                    <button
+                      className="veg-button"
+                      onClick={() => {
+                        dispatch(addToCart(product));
+                        toast.success(`${product.name} added to cart!`, {
+                          position: "top-center",
+                          autoClose: 1500,
+                          theme: "colored",
+                        });
+                      }}
+                    >
+                      Add to Cart🛒
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+
+          {totalPages > 1 && (
+            <div className="pagination-btn">
               <button
-                className="veg-button"
-                onClick={() => {
-                  dispatch(addToCart(veg));
-                  toast.success(`${veg.name} added to cart!`, {
-                    position: "top-center",
-                    autoClose: 1500,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: false,
-                    draggable: true,
-                    theme: "colored",
-                  });
-                }}
+                className="pagination-button1"
+                onClick={handlePreviousPage}
+                disabled={currentPage === 1}
               >
-                Add to Cart
+                Previous
+              </button>
+              {[...Array(totalPages)].map((_, index) => (
+                <button
+                  key={index}
+                  className={`pagination-number ${
+                    currentPage === index + 1 ? "active" : ""
+                  }`}
+                  onClick={() => setCurrentPage(index + 1)}
+                >
+                  {index + 1}
+                </button>
+              ))}
+              <button
+                className="pagination-button2"
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages}
+              >
+                Next
               </button>
             </div>
-          ))
-        )}
+          )}
+        </div>
       </div>
 
-      <div className="pagination-btn">
-        <button className="pagination-button1" onClick={handlePreviousPage} disabled={currentPage === 1}>
-          Previous
-        </button>
-        {[...Array(totalPages)].map((_, index) => (
-          <button
-            key={index}
-            className={`pagination-number ${currentPage === index + 1 ? "active" : ""}`}
-            onClick={() => setCurrentPage(index + 1)}
-          >
-            {index + 1}
-          </button>
-        ))}
-        <button className="pagination-button2" onClick={handleNextPage} disabled={currentPage === totalPages}>
-          Next
-        </button>
-      </div>
-
-      {/* Toast Notifications */}
       <ToastContainer />
 
-      {/* Footer */}
       <footer className="footer">
         <div className="footer-top">
-          <h3 className="footer-title"> 🧺 BigBasket - All Items Are Available Here! 🙂</h3>
+          <h3 className="footer-title">
+            🧺 BigBasket - All Items Are Available Here! 🙂
+          </h3>
           <div className="footer-links">
             <a href="/">Home</a>
             <a href="/about">About Us</a>
@@ -185,7 +241,9 @@ const Veg = () => {
             <i className="fab fa-instagram" aria-label="Instagram"></i>
             <i className="fab fa-youtube" aria-label="YouTube"></i>
           </div>
-          <p className="footer-copy">© 2025 FoodsZone. All Rights Reserved By Ashvita Kapat</p>
+          <p className="footer-copy">
+            © 2025 FoodsZone. All Rights Reserved By Ashvita Kapat
+          </p>
         </div>
       </footer>
     </div>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaSearch } from 'react-icons/fa';
 import './Home.css';
@@ -38,6 +38,20 @@ const foodItems = [
 ];
 
 const Home = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredCategories = quickCategories.filter((item) =>
+    item.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const filteredFoodItems = foodItems.filter((item) =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
   return (
     <div className="home-page">
       {/* Welcome Section */}
@@ -54,6 +68,8 @@ const Home = () => {
               type="text"
               className="search-input-full"
               placeholder="Search for dishes or categories..."
+              value={searchTerm}
+              onChange={handleSearchChange}
             />
             <FaSearch className="search-icon-full" />
           </div>
@@ -62,12 +78,16 @@ const Home = () => {
           </a>
         </div>
         <div className="quick-categories-full">
-          {quickCategories.map((item, index) => (
-            <Link to={item.link} className="category-circle-full" key={index}>
-              <img src={item.image} alt={item.title} />
-              <span>{item.title}</span>
-            </Link>
-          ))}
+          {filteredCategories.length > 0 ? (
+            filteredCategories.map((item, index) => (
+              <Link to={item.link} className="category-circle-full" key={index}>
+                <img src={item.image} alt={item.title} />
+                <span>{item.title}</span>
+              </Link>
+            ))
+          ) : (
+            <p className="no-results">No categories found matching "{searchTerm}"</p>
+          )}
         </div>
       </section>
 
@@ -76,13 +96,27 @@ const Home = () => {
         <div className="container">
           <h2 className="section-title">Our Menu</h2>
           <div className="menu-grid">
-            {quickCategories.map((item, index) => (
-              <Link to={item.link} key={index} className="menu-card">
-                <img src={item.image} alt={item.title} className="menu-image" />
-                <h3 className="menu-title">{item.title}</h3>
-                <p className="menu-description">{item.description}</p>
-              </Link>
-            ))}
+            {filteredCategories.length > 0 ? (
+              filteredCategories.map((item, index) => (
+                <Link
+                  to={item.link}
+                  key={index}
+                  className="menu-card"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <div className="menu-card-inner">
+                    <img src={item.image} alt={item.title} className="menu-image" />
+                    <div className="menu-card-content">
+                      <h3 className="menu-title">{item.title}</h3>
+                      <p className="menu-description">{item.description}</p>
+                      <span className="menu-cta">Explore Now</span>
+                    </div>
+                  </div>
+                </Link>
+              ))
+            ) : (
+              <p className="no-results">No menu items found matching "{searchTerm}"</p>
+            )}
           </div>
         </div>
       </section>
@@ -93,12 +127,16 @@ const Home = () => {
           <h2>Special Food Items</h2>
           <div className="marquee-container">
             <div className="marquee-content">
-              {foodItems.map((item, index) => (
-                <div className="marquee-item" key={index}>
-                  <img src={item.img} alt={item.name} />
-                  <p>{item.name}</p>
-                </div>
-              ))}
+              {filteredFoodItems.length > 0 ? (
+                filteredFoodItems.map((item, index) => (
+                  <div className="marquee-item" key={index}>
+                    <img src={item.img} alt={item.name} />
+                    <p>{item.name}</p>
+                  </div>
+                ))
+              ) : (
+                <p className="no-results">No special food items found matching "{searchTerm}"</p>
+              )}
             </div>
           </div>
         </div>
@@ -146,7 +184,7 @@ const Home = () => {
           </div>
         </div>
         <div className="footer-bottom">
-          &copy; {new Date().getFullYear()} BigBasket. All rights reserved.
+          © {new Date().getFullYear()} BigBasket. All rights reserved.
         </div>
       </footer>
     </div>
